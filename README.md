@@ -28,7 +28,39 @@ Set-ExecutionPolicy Bypass -Scope Process
 pip install mysql-connector-python
 ```
 
-**3º passo**: 
+**3º passo**: Para proteger nossas credenciais de acesso ao banco de dados, criaremos um arquivo `.env` na raiz do projeto. Esse arquivo conterá as variáveis de ambiente que serão utilizadas para conectar a aplicação ao banco de dados. Precisamos, então, instalar a dependência `python-dotenv`:
 
+```bash
+pip install python-dotenv
+```
 
+**4º passo**: Criaremos um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+
+```env
+BD_HOST = 'localhost' # host do banco de dados
+BD_USER = '' # usuário do banco de dados
+BD_PSWD = '' # senha do banco de dados
+BD_DATABASE = 'vingadores' # nome do banco de dados
+```
+
+Adicionalmente, crie um arquivo `.env.example` com as variáveis de ambiente, mas sem os valores, e adicione-o ao repositório. Assim, os colaboradores do projeto poderão copiar o arquivo `.env.example` e criar o arquivo `.env` com suas próprias credenciais. 
+
+**5º passo**: Para utilizar as variáveis de ambiente do arquivo `.env`, precisamos importar a biblioteca `dotenv` e carregar as variáveis de ambiente no arquivo `app.py`:
+
+```python
+from dotenv import load_dotenv
+load_dotenv() # carrega as variáveis de ambiente do arquivo .env
+```
+
+Você poderá acessar as variáveis de ambiente do arquivo `.env` da seguinte forma:
+
+```python
+from os import getenv
+getenv('BD_HOST')
+getenv('BD_USER')
+getenv('BD_PSWD')
+getenv('BD_DATABASE')
+```
+
+**IMPORTANTE**: O arquivo `.env` não deve ser versionado. Para isso, crie um arquivo `.gitignore` na raiz do projeto e adicione o arquivo `*.env` nele. Adicione também os diretórios `__pycache__` e `.venv` ao arquivo `.gitignore`.
 
