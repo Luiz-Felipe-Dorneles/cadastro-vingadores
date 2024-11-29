@@ -1,9 +1,12 @@
+from model.database import Database
+
 class Vingador:
     
     CATEGORIAS_PERMITIDAS = ['Humano', 'Meta-humano', 'Androide', 'Deidade', 'Alienígena']
     lista_vingadores = []
 
-    def __init__(self, nome_heroi, nome_real, categoria, poderes, poder_principal, fraquezas, nivel_forca, convocado=False, tornozeleira=False, chip_gps=False):
+    def __init__(self, id_heroi, nome_heroi, nome_real, categoria, poderes, poder_principal, fraquezas, nivel_forca, convocado=False, tornozeleira=False, chip_gps=False):
+        self.id_heroi = id_heroi
         self.nome_heroi = nome_heroi
         self.nome_real = nome_real
         self.categoria = categoria.capitalize()
@@ -109,5 +112,20 @@ class Vingador:
 
     def listar_poderes(self):
         return self.poderes
+    
+    @staticmethod
+    def carregar_herois():
+        try:
+            db = Database()
+            db.connect()
+
+            query = 'SELECT heroi_id, nome_heroi, nome_real, categoria, poderes, poder_principal, fraquezas, nivel_forca FROM heroi'
+            herois  = db.select(query)
+            for heroi in herois:
+                Vingador(*heroi)
+        except Exception as e:
+            print(f'Erro ao carregar os heróis: {e}')
+        finally:
+            db.disconnect()
     
    
