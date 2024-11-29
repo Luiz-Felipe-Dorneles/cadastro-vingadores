@@ -19,7 +19,7 @@ Set-ExecutionPolicy Bypass -Scope Process
 ```
 9. Em seguida execute o script de ativação com o comando:
 ```bash
-.\.venv\Scripts\Activate.ps1` (Powershell)
+.\.venv\Scripts\Activate.ps1`
 ```
 
 **2º passo**: Para conectar nossa aplicação com o banco de dados, utilizaremos o MySQL. Para isso, precisamos instalar uma dependência, o pacote `mysql-connector-python`:
@@ -63,4 +63,3 @@ getenv('BD_DATABASE')
 ```
 
 **IMPORTANTE**: O arquivo `.env` não deve ser versionado. Para isso, crie um arquivo `.gitignore` na raiz do projeto e adicione o arquivo `*.env` nele. Adicione também os diretórios `__pycache__` e `.venv` ao arquivo `.gitignore`.
-
