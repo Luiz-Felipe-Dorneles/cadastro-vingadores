@@ -103,18 +103,26 @@ class Interface:
 
     def convocar_vingador(self):
         nome_heroi = capwords(input("Nome do herói: "))
-        motivo = capwords(input("Motivo: "))
-        status = capwords(input("Status: "))
+        
         for vingador in Vingador.lista_vingadores:
             if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
                 print(vingador.convocar())
                 
                 try:
+                    motivo = capwords(input("Motivo: "))
+                    status = capwords(input("Status (Pendente, Compareceu, Ausente): "))
+                    opcoes_validas = ['Pendente', 'Compareceu', 'Ausente']
+
+                    if status not in opcoes_validas:
+                        print(f'Opção "{status}" inválida. Opções válidas: {', '.join(opcoes_validas)}.\n Faça a convocação novamente.')
+                        self.aguardar_enter()
+                        return
+                    
                     db = Database()
                     db.connect()
                     
-                    query = 'INSERT INTO convocacao (motivo, status) VALUES (%s, %s)'
-                    values = (motivo, status)
+                    query = 'INSERT INTO convocacao (nome_heroi, motivo, status) VALUES (%s, %s, %s)'
+                    values = (nome_heroi, motivo, status)
                     db.execute_query(query, values)
                 except Exception as e:
                     print('Erro ao convocar héroi {e}')
@@ -131,11 +139,33 @@ class Interface:
         nome_heroi = capwords(input("Nome do herói: "))
         for vingador in Vingador.lista_vingadores:
             if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
-                print(vingador.aplicar_tornozeleira())
+                
+                try:
+                    status = capwords(input("Status (Ativa, Inativa): "))
+                    opcoes_validas = ['Ativa', 'Inativa']
+                
+                    if status not in opcoes_validas:
+                        print(f'Opção "{status}" inválida. Opções válidas: {', '.join(opcoes_validas)}.\n Faça a ação novamente.')
+                        self.aguardar_enter()
+                        return
+                
+                    db = Database()
+                    db.connect()
+                    
+                    query = 'INSERT INTO tornozeleira (nome_heroi, status) VALUES (%s,  %s)'
+                    values = (nome_heroi, status)
+                    db.execute_query(query, values)
+                
+                except Exception as e:
+                    print('Erro ao aplicar tornozeleira ao héroi {e}')
+                finally:
+                    db.disconnect()
+                
                 self.aguardar_enter()
-                return
+                return       
         
         print(f"Vingador(a) '{nome_heroi}' não encontrado.")
+        self.aguardar_enter()
  
         #================================================================
 
@@ -143,6 +173,7 @@ class Interface:
         nome_heroi = capwords(input("Nome do herói: "))
         for vingador in Vingador.lista_vingadores:
             if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
+
                 print(vingador.aplicar_chip_gps())
                 self.aguardar_enter()
                 return
@@ -155,9 +186,26 @@ class Interface:
         nome_heroi = capwords(input("Nome do herói: "))
         for vingador in Vingador.lista_vingadores:
             if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
-                vingador.listar_detalhes_vingador()
+                try:
+                    localizacao_atual = capwords(input("localização atual: "))
+                    ultima_localizacao = capwords(input("ultima localização: "))
+                    
+                
+                    db = Database()
+                    db.connect()
+                    
+                    query = 'INSERT INTO chip-gps (nome_heroi, localizacao_atual, ultima_localizacao) VALUES (%s, %s, %s)'
+                    values = (nome_heroi, localizacao_atual, ultima_localizacao)
+                    db.execute_query(query, values)
+                
+                except Exception as e:
+                    print('Erro ao aplicar chip-gps ao héroi {e}')
+                finally:
+                    db.disconnect()
+                
                 self.aguardar_enter()
-                return
+                return       
+        
         print(f"Vingador(a) '{nome_heroi}' não encontrado.")
         self.aguardar_enter()
 
