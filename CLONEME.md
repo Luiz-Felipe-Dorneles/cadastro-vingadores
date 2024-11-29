@@ -1,14 +1,14 @@
 # Clonando seu repositório do projeto
 
-Para clonar o repositório do projeto, você deve ter o Git instalado em sua máquina. Caso não tenha, você pode baixá-lo [aqui](https://git-scm.com/downloads).
+Para clonar o repositório do projeto, você deve ter o Git instalado em sua máquina. Caso não tenha, você pode baixá-lo aqui: <https://git-scm.com/downloads>.
 
-Com o Git instalado, abra o terminal e execute o seguinte comando:
+Com o Git instalado, abra o terminal do Git (Git Bash) e execute o seguinte comando:
 
 ```bash
-git clone <url-do-repositorio>
+git clone <url-do-repositorio> <nome-da-pasta-opcional> 
 ```
 
-> Substitua `<url-do-repositorio>` pela URL do repositório do projeto. Você pode copiar a URL do repositório clicando no botão "Code" e copiando a URL que aparece.
+Substitua `<url-do-repositorio>` pela URL do repositório do projeto e `<nome-da-pasta-opcional>` pelo nome da pasta que você deseja que o repositório seja clonado. Caso você não informe o nome da pasta, o repositório será clonado na pasta atual e será criada uma pasta com o mesmo nome do repositório. 
 
 Após clonar o repositório, você terá uma pasta com o nome do repositório na pasta em que você executou o comando. Para acessar a pasta do projeto, execute o comando:
 
@@ -16,7 +16,7 @@ Após clonar o repositório, você terá uma pasta com o nome do repositório na
 code -r <nome-da-pasta>
 ```
 
-> Substitua `<nome-da-pasta>` pelo nome da pasta do repositório.
+Substitua `<nome-da-pasta>` pelo nome da pasta do repositório.
 
 Pronto! Agora você tem o repositório do projeto clonado em sua máquina e pode começar a trabalhar no projeto. Caso você queira utilizar a interface gráfica do Git, você pode instalar o [GitHub Desktop](https://desktop.github.com/) ou clonar o repositório diretamente pelo Visual Studio Code.
 
@@ -25,8 +25,6 @@ Pronto! Agora você tem o repositório do projeto clonado em sua máquina e pode
 O Git é uma ferramenta de controle de versão que permite que você mantenha um histórico de todas as alterações feitas em um projeto. Isso é importante para que você possa acompanhar o desenvolvimento do projeto e, caso algo dê errado, você possa voltar para uma versão anterior do projeto. Já o GitHub é uma plataforma que permite que você hospede seus repositórios de forma gratuita e compartilhe seu código com outras pessoas. Além disso, o GitHub oferece diversas ferramentas que facilitam o trabalho em equipe, como issues, pull requests e projetos.
 
 Caso você deseje prosseguir na carreira de desenvolvimento de software, é essencial que você aprenda a utilizar o Git e o GitHub, pois essas são ferramentas amplamente utilizadas no mercado de trabalho. Além disso, o Git e o GitHub são ferramentas poderosas que podem te ajudar a se tornar um desenvolvedor mais eficiente e produtivo. É o arroz com feijão do desenvolvedor!
-
----
 
 ## Após clonar o repositório
 
@@ -111,6 +109,6 @@ Ou, no terminal do PowerShell:
 Get-Content .\data\vingadores.sql -Raw | & mysql -u <usuario> -p
 ```
 
-> Verifique se o seu arquivo `vingadores.sql` está na pasta `data` do projeto. Substitua `<usuario>` pelo usuário do MySQL e `<nome-do-banco>` pelo nome do banco de dados que você deseja importar o arquivo `vingadores.sql` (**somente informe o nome do banco de dados se o arquivo `vingadores.sql` não contiver a instrução `CREATE DATABASE`**).
+Verifique se o seu arquivo `vingadores.sql` está na pasta `data` do projeto. Substitua `<usuario>` pelo usuário do MySQL e `<nome-do-banco>` pelo nome do banco de dados que você deseja importar o arquivo `vingadores.sql` (**somente informe o nome do banco de dados se o arquivo `vingadores.sql` não contiver a instrução `CREATE DATABASE`**).
 
 Se preferir, você pode importar o arquivo `vingadores.sql` utilizando o MySQL Workbench. Para isso, abra o MySQL Workbench, conecte-se ao seu servidor MySQL e clique em `File > Run SQL Script...`. Selecione o arquivo `vingadores.sql` e clique em `Run`.
