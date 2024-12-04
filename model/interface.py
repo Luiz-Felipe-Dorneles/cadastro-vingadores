@@ -2,8 +2,9 @@ from string import capwords
 from model.vingador import Vingador
 from os import system
 from model.database import Database
+ 
 class Interface:
-
+ 
     def __init__(self):
         Vingador.carregar_herois()
         self.menu_principal()
@@ -64,8 +65,6 @@ class Interface:
                 self.aguardar_enter()
                 self.menu_principal()
  
-        #================================================================
-
     def cadastrar_vingador(self):
         nome_heroi = input("Nome do herói: ")
         nome_real = input("Nome real: ")
@@ -83,9 +82,9 @@ class Interface:
  
             query = "INSERT INTO heroi (nome_heroi, nome_real, categoria, poderes, poder_principal, fraquezas, nivel_forca) VALUES (%s,%s,%s,%s,%s,%s,%s)"
             values = (nome_heroi, nome_real, categoria, ', ' .join(poderes), poder_principal, ', '.join(fraquezas), nivel_forca)
-            
+ 
             cursor = db.execute_query(query, values)
-            
+ 
             Vingador(cursor.lastrowid, nome_heroi, nome_real, categoria, poderes, poder_principal, fraquezas, nivel_forca)
         except Exception as e:
             print('Erro ao salvar vingador no banco de dados: {e}')
@@ -99,118 +98,116 @@ class Interface:
         input("\nPressione Enter para continuar...")
         self.menu_principal()
  
-        #============================================================================
-
     def convocar_vingador(self):
-        nome_heroi = capwords(input("Nome do herói: "))
-        
+ 
+        nome_heroi = input("Nome do herói: ")
         for vingador in Vingador.lista_vingadores:
             if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
-                print(vingador.convocar())
-                
                 try:
-                    motivo = capwords(input("Motivo: "))
-                    status = capwords(input("Status (Pendente, Compareceu, Ausente): "))
-                    opcoes_validas = ['Pendente', 'Compareceu', 'Ausente']
-
-                    if status not in opcoes_validas:
-                        print(f'Opção "{status}" inválida. Opções válidas: {', '.join(opcoes_validas)}.\n Faça a convocação novamente.')
-                        self.aguardar_enter()
-                        return
-                    
                     db = Database()
                     db.connect()
-                    
-                    query = 'INSERT INTO convocacao (nome_heroi, motivo, status) VALUES (%s, %s, %s)'
-                    values = (nome_heroi, motivo, status)
+ 
+                    motivo = capwords(input("motivo: "))
+                    status = capwords(input("status (Pendente, Compareceu, Ausente): "))
+                    opcoes_validas = ["Pendente", "Ausente","Compareceu"]
+                     
+                    if status not in opcoes_validas:
+                        print(f'Opção "{status}" inválida. Opções válidas {', '.join(opcoes_validas)}.\n faça a convocação novamente')
+                        self.aguardar_enter()
+                        return
+                   
+                    query = "INSERT INTO convocacao (nome_heroi, motivo,status) VALUES (%s,%s,%s)"
+                    values = (nome_heroi,motivo, status)
                     db.execute_query(query, values)
+                   
+                                           
                 except Exception as e:
-                    print('Erro ao convocar héroi {e}')
+                    print('Erro ao convocar Vingador: {e}')
                 finally:
                     db.disconnect()
+ 
+                print(vingador.convocar())
                 self.aguardar_enter()
-                return       
+                return
+           
+       
         print(f"Vingador(a) '{nome_heroi}' não encontrado.")
         self.aguardar_enter()
  
-        #================================================================
-
+ 
     def aplicar_tornozeleira(self):
-        nome_heroi = capwords(input("Nome do herói: "))
+ 
+        nome_heroi = input("Nome do herói: ")
         for vingador in Vingador.lista_vingadores:
             if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
-                
                 try:
-                    status = capwords(input("Status (Ativa, Inativa): "))
-                    opcoes_validas = ['Ativa', 'Inativa']
-                
+                    status = input("status (Inativa, Ativa): ")
+                    opcoes_validas = ["Ativa", "Inativa"]
+                     
                     if status not in opcoes_validas:
-                        print(f'Opção "{status}" inválida. Opções válidas: {', '.join(opcoes_validas)}.\n Faça a ação novamente.')
+                        print(f'Opção "{status}" inválida. Opções válidas {', '.join(opcoes_validas)}.\n faça a seleção novamente')
                         self.aguardar_enter()
                         return
-                
-                    db = Database()
-                    db.connect()
-                    
-                    query = 'INSERT INTO tornozeleira (nome_heroi, status) VALUES (%s,  %s)'
+                       
+                    db = Database
+                    db.connect
+ 
+                    query = "INSERT INTO tornozeleira (nome_heroi, status) VALUES (%s,%s)"
                     values = (nome_heroi, status)
                     db.execute_query(query, values)
-                
+                   
+                                           
                 except Exception as e:
-                    print('Erro ao aplicar tornozeleira ao héroi {e}')
+                    print('Erro ao colocar tornozeleira: {e}')
+                    self.aguardar_enter()
                 finally:
                     db.disconnect()
-                
                 self.aguardar_enter()
-                return       
-        
-        print(f"Vingador(a) '{nome_heroi}' não encontrado.")
+                return
+                   
+        print(f'Vingador(a) "{nome_heroi}" não encontrado')
         self.aguardar_enter()
+               
  
-        #================================================================
-
     def aplicar_chip_gps(self):
         nome_heroi = capwords(input("Nome do herói: "))
         for vingador in Vingador.lista_vingadores:
             if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
-
-                print(vingador.aplicar_chip_gps())
+                try:
+                   
+                    localizacao_atual = capwords(input("localização atual: "))
+                    localizacao_ultima = capwords(input("última localização : "))
+                   
+                    db = Database()
+                    db.connect()
+                   
+                    query = "INSERT INTO tornozeleira (nome_heroi, localizacao_atual, localizacao_ultimo) VALUES (%s,%s,%s)"
+                    values = (nome_heroi, localizacao_atual, localizacao_ultima)
+                    db.execute_query(query, values)
+                except Exception as e:
+                    print('Erro ao colocar tornozeleira: {e}')
+                    self.aguardar_enter()
+                finally:
+                    db.disconnect()
+                self.aguardar_enter()
+                return
+           
+            print(vingador.aplicar_chip_gps())
+            self.aguardar_enter()
+ 
+        print(f"Vingador(a) '{nome_heroi}' não encontrado.")
+        self.aguardar_enter()
+ 
+    def listar_detalhes_vingador(self):
+        nome_heroi = capwords(input("Nome do herói: "))
+        for vingador in Vingador.lista_vingadores:
+            if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
+                vingador.listar_detalhes_vingador()
                 self.aguardar_enter()
                 return
         print(f"Vingador(a) '{nome_heroi}' não encontrado.")
         self.aguardar_enter()
  
-        #================================================================
-
-    def listar_detalhes_vingador(self):
-        nome_heroi = capwords(input("Nome do herói: "))
-        for vingador in Vingador.lista_vingadores:
-            if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
-                try:
-                    localizacao_atual = capwords(input("localização atual: "))
-                    ultima_localizacao = capwords(input("ultima localização: "))
-                    
-                
-                    db = Database()
-                    db.connect()
-                    
-                    query = 'INSERT INTO chip-gps (nome_heroi, localizacao_atual, ultima_localizacao) VALUES (%s, %s, %s)'
-                    values = (nome_heroi, localizacao_atual, ultima_localizacao)
-                    db.execute_query(query, values)
-                
-                except Exception as e:
-                    print('Erro ao aplicar chip-gps ao héroi {e}')
-                finally:
-                    db.disconnect()
-                
-                self.aguardar_enter()
-                return       
-        
-        print(f"Vingador(a) '{nome_heroi}' não encontrado.")
-        self.aguardar_enter()
-
-        #================================================================
-
     def prender(self):
         nome_heroi = capwords(input("Nome do herói: "))
         for vingador in Vingador.lista_vingadores:
