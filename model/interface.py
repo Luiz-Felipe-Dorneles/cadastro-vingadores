@@ -158,7 +158,7 @@ class Interface:
                    
                                            
                 except Exception as e:
-                    print('Erro ao colocar tornozeleira: {e}')
+                    print(f'Erro ao colocar tornozeleira: {e}')
                     self.aguardar_enter()
                 finally:
                     db.disconnect()

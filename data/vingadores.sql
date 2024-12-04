@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `vingadores` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `vingadores`;
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
 -- Host: localhost    Database: vingadores
@@ -23,13 +25,13 @@ DROP TABLE IF EXISTS `chip-gps`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `chip-gps` (
-  `id_chipgps` int NOT NULL,
+  `id_chipgps` int NOT NULL AUTO_INCREMENT,
   `id_tornozeleira` int NOT NULL,
-  `localizacao_atual` varchar(45) NOT NULL,
-  `ultima_localizacao` varchar(45) DEFAULT NULL,
+  `localização_atual` varchar(150) DEFAULT NULL,
+  `ultima_localizacao` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id_chipgps`),
   KEY `id_tornozeleira_idx` (`id_tornozeleira`),
-  CONSTRAINT `id_tornozeleira` FOREIGN KEY (`id_tornozeleira`) REFERENCES `tornozeleira` (` id_tornozeleira`)
+  CONSTRAINT `id_tornozeleira` FOREIGN KEY (`id_tornozeleira`) REFERENCES `tornozeleira` (`id_tornozeleira`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -56,8 +58,7 @@ CREATE TABLE `convocacao` (
   `data_convocacao` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data_comparecimento` date DEFAULT NULL,
   `status` enum('Pendente','Compareceu','Ausente') NOT NULL,
-  PRIMARY KEY (`numero_registro`),
-  KEY `nome_heroi_idx` (`nome_heroi`)
+  PRIMARY KEY (`numero_registro`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -67,7 +68,7 @@ CREATE TABLE `convocacao` (
 
 LOCK TABLES `convocacao` WRITE;
 /*!40000 ALTER TABLE `convocacao` DISABLE KEYS */;
-INSERT INTO `convocacao` VALUES (1,'Homem Aranha','Brigou','2024-11-29 13:37:25',NULL,'Pendente'),(2,'Thor','Martelo Quebrou','2024-11-29 14:16:47',NULL,'Compareceu');
+INSERT INTO `convocacao` VALUES (1,'Homem Aranha','Duende Verde','2024-12-04 10:52:56',NULL,'Pendente'),(2,'Homem de Ferro','Ultron','2024-12-04 11:06:25',NULL,'Pendente');
 /*!40000 ALTER TABLE `convocacao` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -79,11 +80,12 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `Convocacao_BEFORE_UPDATE` BEFORE UPDATE ON `convocacao` FOR EACH ROW BEGIN
- 
-	IF NEW.status = 'pendente' AND OLD.status <> 'comparecido' and OLD.status <> 'ausente' THEN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `Convocacao_BEFORE_UPDATE` BEFORE UPDATE ON `convocacao` FOR EACH ROW BEGIN 
+
+	IF NEW.status = 'Pendente' AND OLD.status <> 'Pendente' and OLD.status <> 'Ausente' THEN
         SET New.data_comparecimento = CURRENT_TIMESTAMP;
 	end if;
+    
     end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -108,7 +110,7 @@ CREATE TABLE `heroi` (
   `fraquezas` varchar(45) DEFAULT NULL,
   `nivel_forca` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`heroi_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,8 +119,33 @@ CREATE TABLE `heroi` (
 
 LOCK TABLES `heroi` WRITE;
 /*!40000 ALTER TABLE `heroi` DISABLE KEYS */;
-INSERT INTO `heroi` VALUES (2,'Homem de Ferro','Tony Stark','Humano','Inteligência, Tecnologia','Armadura','Arrogância','100'),(3,'Thor','Thor','Deus','Força, Relâmpagos, Mjolnir','Rompe-tormentas','Orgulho, Fortnite','1000'),(4,'Hulk','Bruce','Humano','Força,  pulo','Força','Escadas','1000');
+INSERT INTO `heroi` VALUES (2,'Homem de Ferro','Tony Stark','Humano','Inteligência, Tecnologia','Armadura','Arrogância','100'),(3,'Thor','Thor','Deus','Força, Relâmpagos, Mjolnir','Rompe-tormentas','Orgulho, Fortnite','1000'),(4,'Homem Aranha','Peter Parker','Humano','Teias,  Escalar,  Agilidade','Sentido Aranha','Tia may,  MJ,  Dinheiro','100'),(5,'Hulk','Bruce Banner','Humano','super força','Força','Escadas','1000'),(6,'Capitão America','Steve Rogers','Humano','Super Força','Habilidades Super Humanas','Amor','80');
 /*!40000 ALTER TABLE `heroi` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mandado_prisao`
+--
+
+DROP TABLE IF EXISTS `mandado_prisao`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `mandado_prisao` (
+  `numero_registro_prisao` int NOT NULL AUTO_INCREMENT,
+  `motivo` varchar(250) NOT NULL,
+  `data_mandado` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` enum('Ativo','Cumprido','Cancelado') NOT NULL,
+  PRIMARY KEY (`numero_registro_prisao`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mandado_prisao`
+--
+
+LOCK TABLES `mandado_prisao` WRITE;
+/*!40000 ALTER TABLE `mandado_prisao` DISABLE KEYS */;
+/*!40000 ALTER TABLE `mandado_prisao` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -129,13 +156,16 @@ DROP TABLE IF EXISTS `tornozeleira`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tornozeleira` (
-  ` id_tornozeleira` int NOT NULL AUTO_INCREMENT,
-  `nome_heroi` varchar(45) NOT NULL,
-  `status` enum('ativa','inativa') NOT NULL,
-  `data_ativacao` datetime DEFAULT CURRENT_TIMESTAMP,
+  `id_tornozeleira` int NOT NULL AUTO_INCREMENT,
+  `heroi_id` int NOT NULL,
+  `nome_heroi` varchar(45) DEFAULT NULL,
+  `status` enum('Ativa','Inativa') NOT NULL,
+  `data_ativacao` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data_desativacao` date DEFAULT NULL,
-  PRIMARY KEY (` id_tornozeleira`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id_tornozeleira`),
+  KEY `id_heroi_idx` (`heroi_id`),
+  CONSTRAINT `id_heroi` FOREIGN KEY (`heroi_id`) REFERENCES `heroi` (`heroi_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,7 +174,6 @@ CREATE TABLE `tornozeleira` (
 
 LOCK TABLES `tornozeleira` WRITE;
 /*!40000 ALTER TABLE `tornozeleira` DISABLE KEYS */;
-INSERT INTO `tornozeleira` VALUES (1,'Thor','ativa','2024-11-29 15:12:15',NULL),(2,'Homem Aranha','ativa','2024-11-29 15:15:23',NULL);
 /*!40000 ALTER TABLE `tornozeleira` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -157,8 +186,8 @@ UNLOCK TABLES;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `tornozeleira_BEFORE_UPDATE` BEFORE UPDATE ON `tornozeleira` FOR EACH ROW BEGIN
-     IF NEW.status = 'inativa' AND OLD.status <> 'inativa' THEN
-		SET	New.data_desativacao = CURRENT_TIMESTAMP;
+	IF NEW.status = 'inativa' AND OLD.status <> 'inativa' THEN
+        SET New.data_desativacao = CURRENT_TIMESTAMP;
 	end if;
 END */;;
 DELIMITER ;
@@ -184,4 +213,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-04 13:49:12
+-- Dump completed on 2024-12-04 13:53:28
