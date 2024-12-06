@@ -101,8 +101,6 @@ class Vingador:
         return f'{self.nome_heroi} não foi convocado ainda.'
  
     def aplicar_chip_gps(self):
-        if not self._tornozeleira:
-            return f'{self.nome_heroi} precisa estar com a tornozeleira aplicada.'
         self.chip_gps = True
         return 'Chip GPS aplicado com sucesso!'
  

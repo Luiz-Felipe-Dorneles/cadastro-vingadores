@@ -5,6 +5,7 @@ from model.database import Database
  
 class Interface:
  
+ 
     def __init__(self):
         Vingador.carregar_herois()
         self.menu_principal()
@@ -187,24 +188,37 @@ class Interface:
                 try:
                    
                     localizacao_atual = capwords(input("localização atual: "))
-                    localizacao_ultima = capwords(input("última localização : "))
+                    ultima_localizacao = capwords(input("última localização : "))
                    
                     db = Database()
                     db.connect()
+ 
+                    query = f"Select heroi_id from heroi where (nome_heroi like '%{nome_heroi}%') or (nome_real like '%{nome_heroi}%') limit 1"
                    
-                    query = "INSERT INTO tornozeleira (nome_heroi, localizacao_atual, localizacao_ultimo) VALUES (%s,%s,%s)"
-                    values = (nome_heroi, localizacao_atual, localizacao_ultima)
+                    heroi_id = db.select(query) #retorna uma lista de tuplas
+                    heroi_id = int(heroi_id[0][0])
+ 
+                    # if heroi_id == vingador.heroi_id:
+                    query = f"select id_tornozeleira from tornozeleira where (heroi_id like '%{heroi_id}%') limit 1"
+                   
+                    id_tornozeleira = db.select(query)
+                    id_tornozeleira = int(id_tornozeleira[0][0])
+               
+                    query = "INSERT INTO chip_gps (heroi_id, id_tornozeleira, localizacao_atual, ultima_localizacao) VALUES (%s,%s,%s,%s)"
+ 
+                    values = (heroi_id, id_tornozeleira, localizacao_atual, ultima_localizacao)
                     db.execute_query(query, values)
+ 
                 except Exception as e:
-                    print('Erro ao colocar tornozeleira: {e}')
+                    print(f'Erro ao colocar tornozeleira: {e}')
                     self.aguardar_enter()
                 finally:
                     db.disconnect()
                 self.aguardar_enter()
                 return
            
-            print(vingador.aplicar_chip_gps())
-            self.aguardar_enter()
+                print(vingador.aplicar_chip_gps())
+                self.aguardar_enter()
  
         print(f"Vingador(a) '{nome_heroi}' não encontrado.")
         self.aguardar_enter()
@@ -220,12 +234,42 @@ class Interface:
         self.aguardar_enter()
  
     def prender(self):
-        nome_heroi = capwords(input("Nome do herói: "))
+        nome_heroi = input("Nome do herói: ")
         for vingador in Vingador.lista_vingadores:
             if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
+                try:
+                    db = Database()
+                    db.connect()
+ 
+                    motivo = capwords(input("motivo: "))
+                    status = capwords(input("status (Ativo, Cumprido, Cancelado): "))
+                    opcoes_validas = ["Ativo", "Cumprido","Cancelado"]
+                     
+                    if status not in opcoes_validas:
+                        print(f'Opção "{status}" inválida. Opções válidas {', '.join(opcoes_validas)}.\n faça a prisão novamente')
+                        self.aguardar_enter()
+                        return
+                   
+                    if nome_heroi in vingador.nome_heroi or nome_heroi in vingador.nome_real:
+                   
+                        query = f"Select heroi_id from heroi where (nome_heroi like '%{nome_heroi}%') or (nome_real like '%{nome_heroi}%') limit 1"
+                        heroi_id = db.select(query)
+ 
+                        query = "INSERT INTO mandado_prisao (heroi_id, nome_heroi, motivo,`status`) VALUES (%s,%s,%s,%s)"
+                        values = (int(heroi_id[0][0]), nome_heroi,motivo, status)
+                        db.execute_query(query, values)
+                   
+                                           
+                except Exception as e:
+                    print('Erro ao prender o Vingador: {e}')
+                finally:
+                    db.disconnect()
+ 
                 print(vingador.prender())
                 self.aguardar_enter()
                 return
+           
+       
         print(f"Vingador(a) '{nome_heroi}' não encontrado.")
         self.aguardar_enter()
  
@@ -244,3 +288,4 @@ class Interface:
 ██▄▀▄███─██─██▄─██─███─██▀██─▀─███─█▄▀─████─████─▄█▀█
 ▀▀▀▄▀▀▀▄▄▄▀▄▄▄▄▄▀▄▄▄▀▄▄▄▄▄▀▄▄▀▄▄▀▄▄▄▀▀▄▄▀▀▄▄▄▀▀▄▄▄▄▄▀        
         ''')
+ 
